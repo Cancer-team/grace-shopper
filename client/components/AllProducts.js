@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { fetchProducts } from "../redux/allProducts";
+import { fetchProducts } from "../store/allProducts";
 import { Link } from "react-router-dom";
 
 // Notice that we're exporting the AllCampuses component twice. The named export
