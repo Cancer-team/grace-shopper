@@ -1,22 +1,30 @@
 //this is the access point for all things database related!
-
-const db = require("./db");
 const Sequelize = require("sequelize");
+const db = require("./db");
 
 const User = require("./models/User");
 const Product = require("./models/Product");
 const Order = require("./models/Order");
 //associations could go here!
 
-const Cart = db.define("cart", {
-  quantity: Sequelize.INTEGER,
+const Order_Products = db.define("Order_Product", {
+  quantity: {
+    type: Sequelize.INTEGER,
+  },
+  //Price is calculated in pennies
+  unitPrice: {
+    type: Sequelize.INTEGER,
+  },
+  totalPrice: {
+    type: Sequelize.INTEGER,
+  },
 });
 
-User.belongsToMany(Product, { through: Cart });
-Product.belongsToMany(User, { through: Cart });
-User.hasMany(Order);
 Order.belongsTo(User);
-// Product.belongsToMany(Order, {through})
+User.hasMany(Order);
+
+Product.belongsToMany(Order, { through: Order_Products });
+Order.belongsToMany(Product, { through: Order_Products });
 
 module.exports = {
   db,
@@ -24,5 +32,6 @@ module.exports = {
     User,
     Product,
     Order,
+    Order_Products,
   },
 };
