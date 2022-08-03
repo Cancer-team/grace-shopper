@@ -16,7 +16,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.get('/cart/:id', async (req, res, next) => {
+router.get('/viewcart/:id', async (req, res, next) => {
   try{
     const {id} = req.params;
     const user = await User.findByPk(id, {
@@ -24,6 +24,23 @@ router.get('/cart/:id', async (req, res, next) => {
         model: Order,
         where: {
           status: 'open'
+        }
+      }
+    });
+    res.send(user);
+  }catch(err){
+    next(err)
+  }
+});
+
+router.get('/vieworders/:id', async (req, res, next) => {
+  try{
+    const {id} = req.params;
+    const user = await User.findByPk(id, {
+      include:{
+        model: Order,
+        where: {
+          status: 'closed'
         }
       }
     });
@@ -45,3 +62,5 @@ router.post('/newUser', async (req, res, next) => {
     next(err)
   }
 });
+
+
