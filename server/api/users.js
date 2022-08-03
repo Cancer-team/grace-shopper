@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { models: { User }} = require('../db')
+const { models: { User, Order_Products }} = require('../db');
 module.exports = router
 
 router.get('/', async (req, res, next) => {
@@ -16,6 +16,8 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+
+//view all open orders (cart) of a user
 router.get('/viewcart/:id', async (req, res, next) => {
   try{
     const {id} = req.params;
@@ -33,6 +35,8 @@ router.get('/viewcart/:id', async (req, res, next) => {
   }
 });
 
+
+//view all closed orders of a user
 router.get('/vieworders/:id', async (req, res, next) => {
   try{
     const {id} = req.params;
@@ -53,6 +57,7 @@ router.get('/vieworders/:id', async (req, res, next) => {
 
 //how to create an admin user? We need to put the userType admin in the req.body.
 
+//creating a new User
 router.post('/newUser', async (req, res, next) => {
   try{
     const {email, password, firstName, lastName, phoneNumber, shippingAddress, billingAddress} = req.body;
@@ -63,4 +68,32 @@ router.post('/newUser', async (req, res, next) => {
   }
 });
 
+//route to set order status from open to closed:
+router.put('/checkout/:id', async (req, res, next) => {
+  try{
+    const {id} = req.params;
+    const ordersToClose = await Order.findAll({where: {
+    foreignKey: id,
+    status: open
+  }});
+  await ordersToClose.update({status: closed});
+  res.send(ordersToClose);
 
+  }catch(err){
+    next(err)
+  }
+});
+
+//route to remove an item from a cart (open order)
+router.delete('/removeitem/:itemId', async (req, res, next) => {
+  try{
+    const {itemId} = req.params;
+    const item = await Order_Products.findByPk(itemId, {where:{
+      status: 'open' //put status to open to make sure we don't delete orders that are closed (past orders)
+    }});
+    await item.destroy();
+    res.send(item);
+  }catch(err){
+    next(err)
+  }
+});
