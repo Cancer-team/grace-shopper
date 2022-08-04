@@ -26,7 +26,7 @@ async function seed() {
 
   const filterCards = cards.filter((card) => {
     if (card.flavorText && card.cardmarket) {
-      if (card.cardmarket.prices[`averageSellPrice`]) return card;
+      if (card.cardmarket.prices.averageSellPrice) return card;
     }
   });
 
