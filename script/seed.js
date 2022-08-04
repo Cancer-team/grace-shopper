@@ -19,7 +19,7 @@ async function seed() {
   // Creating cards
 
   const cards = await pokemon.card
-    .all({ q: "nationalPokedexNumbers:[1 to 151]" })
+    .all({ q: "nationalPokedexNumbers:[1 to 25]" })
     .then((cards) => {
       return cards;
     });
@@ -29,7 +29,8 @@ async function seed() {
       if (card.cardmarket.prices.averageSellPrice) return card;
     }
   });
-  await Promise.all([
+
+  const users = await Promise.all([
     User.create({
       email: "ethan@123.com",
       password: "Hello123!!",
@@ -72,6 +73,12 @@ async function seed() {
       });
     })
   );
+
+  // [Yj, ethan, warren, ryan] = users;
+
+  // const yjOrder = Order.create({ status: "open" });
+
+  // Yj.addOrder(yjOrder);
 
   console.log(`seeded successfully`);
 }

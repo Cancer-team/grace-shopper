@@ -17,9 +17,9 @@ export const getCart = (userId) => {
   };
 };
 
-export default orderReducer = (state = {}, action) => {
+export default function orderReducer(state = [], action) {
   switch (action.type) {
     case GET_CART:
       return action.cart;
   }
-};
+}
