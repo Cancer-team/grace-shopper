@@ -55,7 +55,7 @@ router.get('/vieworders/:id', async (req, res, next) => {
 });
 
 
-//how to create an admin user? We need to put the userType admin in the req.body.
+
 
 //creating a new User
 router.post('/newUser', async (req, res, next) => {
