@@ -31,19 +31,13 @@ export class Login extends React.Component {
     this.props.fetchUsers();
   }
   render() {
-    const products = this.props.users;
-    const { email, password } = this.state;
-    const { handleChange, handleSubmit } = this;
     return (
       <div>
         <h1>Login</h1>
         <div>
-          {/*has a form that takes an email and a password and logs in */}
-          <form onSubmit={onSubmit}>
-            <input value={email} onChange={onChange} name="email" />
-            <input value={password} onChange={onChange} name="password" />
-            <button>Sign In</button>
-          </form>
+        <div>
+          <AuthForm />
+        </div>
           <div>{/*<CreateUser /> goes here*/}</div>
         </div>
       </div>
