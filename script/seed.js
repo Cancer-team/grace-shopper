@@ -10,7 +10,7 @@ const {
  *      match the models, and populates the database.
  */
 
-// pokemon.configure({ apiKey: "d4d5f2db-a789-46db-a495-a503876544ed" });
+pokemon.configure({ apiKey: "d4d5f2db-a789-46db-a495-a503876544ed" });
 
 async function seed() {
   await db.sync({ force: true }); // clears db and matches models to tables
@@ -18,26 +18,32 @@ async function seed() {
 
   // Creating cards
 
-  const cards = await pokemon.card.all().then((cards) => {
-    return cards; // "Blastoise"
+  const cards = await pokemon.card
+    .all({ q: "nationalPokedexNumbers:[1 to 151]" })
+    .then((cards) => {
+      return cards;
+    });
+
+  const filterCards = cards.filter((card) => {
+    if (card.flavorText && card.cardmarket) {
+      if (card.cardmarket.prices.averageSellPrice) return card;
+    }
   });
 
-  console.log(cards.length);
-  // console.log("----------------", cards);
+  await Promise.all(
+    filterCards.map(async (card) => {
+      await Product.create({
+        name: card.name,
+        price: card.cardmarket.prices.averageSellPrice,
+        flavorText: card.flavorText,
+        imageSmall: card.images.small,
+        imageLarge: card.images.large,
+        nationalPokedexNumbers: card.nationalPokedexNumbers[0],
+      });
+    })
+  );
 
-  // const users = await Promise.all([
-  //   User.create({ username: "cody", password: "123" }),
-  //   User.create({ username: "murphy", password: "123" }),
-  // ]);
-
-  // console.log(`seeded ${users.length} users`);
   console.log(`seeded successfully`);
-  // return {
-  //   users: {
-  //     cody: users[0],
-  //     murphy: users[1],
-  //   },
-  // };
 }
 
 /*
