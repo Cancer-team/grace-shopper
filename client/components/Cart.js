@@ -7,6 +7,9 @@ import CartItem from "./CartItem";
 class Cart extends React.Component {
   constructor() {
     super();
+    this.state = {
+        
+    }
   }
   componentDidMount() {
     this.props.getCart(this.props.auth.id);

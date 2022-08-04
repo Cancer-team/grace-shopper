@@ -53,7 +53,7 @@ async function seed() {
       userType: "admin",
     }),
     User.create({
-      email: "rscoville29@gamil.com",
+      email: "rscoville29@gmail.com",
       password: "Hello123!!",
       firstName: "Ryan",
       lastName: "Scoville",
