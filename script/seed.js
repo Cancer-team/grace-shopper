@@ -30,6 +30,37 @@ async function seed() {
     }
   });
 
+  const users = await Promise.all([
+    User.create({
+      email: "ethan@123.com",
+      password: "Hello123!!",
+      firstName: "Ethan",
+      lastName: "Nair",
+      userType: "admin",
+    }),
+    User.create({
+      email: "a920cyj@gmail.com",
+      password: "Hello123!!",
+      firstName: "Yeun Jae",
+      lastName: "Chung",
+      userType: "admin",
+    }),
+    User.create({
+      email: "onsenkame@gmail.com",
+      password: "Hello123!!",
+      firstName: "Warren",
+      lastName: "Au",
+      userType: "admin",
+    }),
+    User.create({
+      email: "rscoville29@gmail.com",
+      password: "Hello123!!",
+      firstName: "Ryan",
+      lastName: "Scoville",
+      userType: "admin",
+    }),
+  ]);
+
   await Promise.all(
     filterCards.map(async (card) => {
       await Product.create({
@@ -42,6 +73,12 @@ async function seed() {
       });
     })
   );
+
+  // [Yj, ethan, warren, ryan] = users;
+
+  // const yjOrder = Order.create({ status: "open" });
+
+  // Yj.addOrder(yjOrder);
 
   console.log(`seeded successfully`);
 }
