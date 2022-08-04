@@ -4,8 +4,8 @@ import { fetchOrder } from "../store/checkout";
 
 export class Checkout extends React.Component {
   componentDidMount() {
-    // const orderId = this.props.match.params.orderId;
-    // this.props.fetchOrder(orderId);
+    const userId = this.props.match.params.userId;
+    this.props.fetchOrder(userId);
   }
   render() {
     // const order = this.props.order;
@@ -32,7 +32,7 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    fetchOrder: (orderId) => dispatch(fetchOrder(orderId)),
+    fetchOrder: (userId) => dispatch(fetchOrder(userId)),
   };
 };
 

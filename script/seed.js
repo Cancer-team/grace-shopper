@@ -19,14 +19,14 @@ async function seed() {
   // Creating cards
 
   const cards = await pokemon.card
-    .all({ q: "nationalPokedexNumbers:[1 to 151]" })
+    .all({ q: "nationalPokedexNumbers:[1 to 25]" })
     .then((cards) => {
       return cards;
     });
 
   const filterCards = cards.filter((card) => {
     if (card.flavorText && card.cardmarket) {
-      if (card.cardmarket.prices.averageSellPrice) return card;
+      if (card.cardmarket.prices[`averageSellPrice`]) return card;
     }
   });
 

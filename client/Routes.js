@@ -31,7 +31,7 @@ class Routes extends Component {
               exact
               component={SingleProduct}
             />
-             <Route path="/checkout/:orderId" component={Checkout} />
+             <Route path="/cart/:userId" component={Checkout} />
           </Switch>
         ) : (
           <Switch>
@@ -42,7 +42,6 @@ class Routes extends Component {
               exact
               component={SingleProduct}
             />
-            <Route path="/checkout/:orderId" component={Checkout} />
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
           </Switch>

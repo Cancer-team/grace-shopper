@@ -11,7 +11,7 @@ const setOrder = (order) => {
 
 export const fetchOrder = (orderId) => {
   return async function (dispatch) {
-    const response = await axios.get(`/api/orders/${orderId}`);
+    const response = await axios.get(`/api/users/cart/${orderId}`);
     const order = response.data;
     dispatch(setOrder(order));
   };
