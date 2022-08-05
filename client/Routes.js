@@ -10,6 +10,9 @@ import Checkout from "./components/Checkout";
 import Payment from "./components/Payment";
 
 
+import Cart from "./components/Cart";
+import Checkout from "./components/Checkout";
+
 /**
  * COMPONENT
  */
@@ -45,7 +48,8 @@ class Routes extends Component {
               exact
               component={SingleProduct}
             />
-            <Route path="/checkout/:orderId" component={Checkout} />
+
+            <Route path="/cart" component={Cart} />
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
           </Switch>

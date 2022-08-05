@@ -13,7 +13,7 @@ const reducer = combineReducers({
   products: productsReducer,
   product: singleProductReducer,
   order: orderReducer,
-  checkoutOrder: 
+  checkoutOrder: checkoutReducer
 });
 
 const middleware = composeWithDevTools(
