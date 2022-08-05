@@ -1,6 +1,5 @@
 const router = require('express').Router()
-const { models: { User, Order_Products, Product }} = require('../db');
-const Order = require('../db/models/Order');
+const { models: { User, Order_Products, Product, Order }} = require('../db');
 module.exports = router
 
 router.get('/', async (req, res, next) => {
@@ -18,8 +17,8 @@ router.get('/', async (req, res, next) => {
 });
 
 
-//another attempt at viewcart:
 
+//viewing cart
 router.get('/viewcart/:userId', async (req, res, next) => {
   try{
     const {userId} = req.params;
@@ -72,13 +71,12 @@ router.post('/newUser', async (req, res, next) => {
 router.put('/checkout/:id', async (req, res, next) => {
   try{
     const {id} = req.params;
-    const ordersToClose = await Order.findAll({where: {
+    const ordersToClose = await Order.findOne({where: {
     userId: id,
-    status: open
+    status: 'open'
   }});
-  await ordersToClose.update({status: closed});
-  res.send(ordersToClose);
-
+  await order.update({status: 'closed'});
+  res.send(ordersToClose)
   }catch(err){
     next(err)
   }
