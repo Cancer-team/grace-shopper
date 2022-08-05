@@ -1,5 +1,7 @@
 const router = require('express').Router()
 const { models: { User, Order, Order_Products }} = require('../db');
+const Order = require('../db/models/Order');
+const Product = require('../db/models/Product');
 module.exports = router
 
 router.get('/', async (req, res, next) => {
@@ -18,7 +20,7 @@ router.get('/', async (req, res, next) => {
 
 
 //view all open orders (cart) of a user
-router.get('/viewcart/:id', async (req, res, next) => {
+router.get('/cart/:id', async (req, res, next) => {
   try{
     const {id} = req.params;
     const user = await User.findByPk(id, {
@@ -72,15 +74,33 @@ router.post('/newUser', async (req, res, next) => {
 router.put('/checkout/:id', async (req, res, next) => {
   try{
     const {id} = req.params;
-    const ordersToClose = await Order.findAll({where: {
+    const ordersToClose = await Order.findOne({where: {
     userId: id,
     status: 'open'
   }});
-  ordersToClose.forEach(async (order) => {
-    await order.update({status: 'closed'})
-  })
+  await order.update({status: 'closed'});
   res.send(ordersToClose)
+  }catch(err){
+    next(err)
+  }
+});
 
+
+router.put('/additem/:id', async (req, res, next) => {
+  try{
+    const product = await Product.findByPk(req.body.id);
+    const {id} = req.params;
+    const user = await User.findByPk(id, {
+      include:{
+        model: Order,
+        where: {
+          status: 'open'
+        }
+      }
+    });
+    const orderToAddTo = await Order.findByPk(user.order.id);
+    await orderToAddTo.addProduct(product);
+    res.send(orderToAddTo);
   }catch(err){
     next(err)
   }
