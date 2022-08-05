@@ -19,8 +19,8 @@ router.get('/', async (req, res, next) => {
 
 
 //another attempt at viewcart:
-
 router.get('/viewcart/:userId', async (req, res, next) => {
+
   try{
     const {userId} = req.params;
     const openOrders = await Order.findOne({where:{
@@ -72,13 +72,33 @@ router.post('/newUser', async (req, res, next) => {
 router.put('/checkout/:id', async (req, res, next) => {
   try{
     const {id} = req.params;
-    const ordersToClose = await Order.findAll({where: {
+    const ordersToClose = await Order.findOne({where: {
     userId: id,
-    status: open
+    status: 'open'
   }});
-  await ordersToClose.update({status: closed});
-  res.send(ordersToClose);
+  await order.update({status: 'closed'});
+  res.send(ordersToClose)
+  }catch(err){
+    next(err)
+  }
+});
 
+
+router.put('/additem/:id', async (req, res, next) => {
+  try{
+    const product = await Product.findByPk(req.body.id);
+    const {id} = req.params;
+    const user = await User.findByPk(id, {
+      include:{
+        model: Order,
+        where: {
+          status: 'open'
+        }
+      }
+    });
+    const orderToAddTo = await Order.findByPk(user.order.id);
+    await orderToAddTo.addProduct(product);
+    res.send(orderToAddTo);
   }catch(err){
     next(err)
   }
