@@ -1,11 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 import { fetchOrder } from "../store/checkout";
+import {Link} from 'react-router-dom'
 
 export class Checkout extends React.Component {
   componentDidMount() {
-    // const orderId = this.props.match.params.orderId;
-    // this.props.fetchOrder(orderId);
+    const userId = this.props.match.params.userId;
+    this.props.fetchOrder(userId);
   }
   render() {
     // const order = this.props.order;
@@ -18,7 +19,7 @@ export class Checkout extends React.Component {
         <p>Billing Address: User.billingAddress</p>
         <div>Order Review: Products: ul products.map...</div>
         <div>ContactInfo: user.email user.phone</div>
-        <Link>On to payment</Link>
+        <Link to={`/cart/${userId}/payment`}><button>Onto Payment</button></Link>
       </div>
     );
   }
@@ -32,7 +33,7 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    fetchOrder: (orderId) => dispatch(fetchOrder(orderId)),
+    fetchOrder: (userId) => dispatch(fetchOrder(userId)),
   };
 };
 
