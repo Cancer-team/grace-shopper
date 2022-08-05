@@ -99,7 +99,7 @@ router.put('/addToCart/:productId', async (req, res, next) => {
     next(err);
   }
 });
-
+//remove item from cart
 router.put('/removeItem/:productId', async (req, res, next) => {
   try{
   const {userId} = req.body;
