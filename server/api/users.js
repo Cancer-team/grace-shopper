@@ -73,11 +73,13 @@ router.put('/checkout/:id', async (req, res, next) => {
   try{
     const {id} = req.params;
     const ordersToClose = await Order.findAll({where: {
-    foreignKey: id,
-    status: open
+    userId: id,
+    status: 'open'
   }});
-  await ordersToClose.update({status: closed});
-  res.send(ordersToClose);
+  ordersToClose.forEach(async (order) => {
+    await order.update({status: 'closed'})
+  })
+  res.send(ordersToClose)
 
   }catch(err){
     next(err)
