@@ -119,19 +119,7 @@ router.put('/addToCart/:productId', async (req, res, next) => {
   }
 });
 
-// //route to remove an item from a cart (open order)
-// router.delete('/removeitem/:itemId', async (req, res, next) => {
-//   try{
-//     const {itemId} = req.params;
-//     const item = await Order_Products.findByPk(itemId, {where:{
-//       status: 'open' //put status to open to make sure we don't delete orders that are closed (past orders)
-//     }});
-//     await item.destroy();
-//     res.send(item);
-//   }catch(err){
-//     next(err)
-//   }
-// });
+
 //removing an item
 router.put('/removeItem/:productId', async (req, res, next) => {
   try{
