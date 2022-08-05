@@ -18,20 +18,42 @@ router.get('/', async (req, res, next) => {
 
 
 //view all open orders (cart) of a user
-router.get('/viewcart/:id', async (req, res, next) => {
+// router.get('/viewcart/:id', async (req, res, next) => {
+//   try{
+//     const {id} = req.params;
+//     const user = await User.findByPk(id, {
+//       include:{
+//         model: Order,
+//         where: {
+//           status: 'open'
+//         }
+//       }
+//     });
+//     res.send(user);
+//   }catch(err){
+//     next(err)
+//   }
+// });
+
+//another attempt at viewcart:
+
+router.get('/viewcart/:userId', async (req, res, next) => {
   try{
-    const {id} = req.params;
-    const user = await User.findByPk(id, {
-      include:{
-        model: Order,
+    const {userId} = req.params;
+    const openOrders = await Order.findOne({where:{
+      status: 'open',
+      userId: userId,
+      include: {
+        model: Order_Products,
         where: {
-          status: 'open'
+          orderId: userId
         }
       }
-    });
-    res.send(user);
+    }});
+    res.send(openOrders);
+
   }catch(err){
-    next(err)
+    next(err);
   }
 });
 
