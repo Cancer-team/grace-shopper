@@ -1,5 +1,6 @@
 const router = require('express').Router()
-const { models: { User, Order_Products }} = require('../db');
+const { models: { User, Order_Products, Product }} = require('../db');
+const Order = require('../db/models/Order');
 module.exports = router
 
 router.get('/', async (req, res, next) => {
@@ -17,24 +18,6 @@ router.get('/', async (req, res, next) => {
 });
 
 
-//view all open orders (cart) of a user
-// router.get('/viewcart/:id', async (req, res, next) => {
-//   try{
-//     const {id} = req.params;
-//     const user = await User.findByPk(id, {
-//       include:{
-//         model: Order,
-//         where: {
-//           status: 'open'
-//         }
-//       }
-//     });
-//     res.send(user);
-//   }catch(err){
-//     next(err)
-//   }
-// });
-
 //another attempt at viewcart:
 
 router.get('/viewcart/:userId', async (req, res, next) => {
@@ -44,14 +27,10 @@ router.get('/viewcart/:userId', async (req, res, next) => {
       status: 'open',
       userId: userId,
       include: {
-        model: Order_Products,
-        where: {
-          orderId: userId
-        }
+        model: Order_Products
       }
     }});
     res.send(openOrders);
-
   }catch(err){
     next(err);
   }
@@ -59,20 +38,19 @@ router.get('/viewcart/:userId', async (req, res, next) => {
 
 
 //view all closed orders of a user
-router.get('/vieworders/:id', async (req, res, next) => {
+router.get('/vieworders/:userId', async (req, res, next) => {
   try{
-    const {id} = req.params;
-    const user = await User.findByPk(id, {
-      include:{
-        model: Order,
-        where: {
-          status: 'closed'
-        }
+    const {userId} = req.params;
+    const openOrders = await Order.findOne({where:{
+      status: 'closed',
+      userId: userId,
+      include: {
+        model: Order_Products
       }
-    });
-    res.send(user);
+    }});
+    res.send(openOrders);
   }catch(err){
-    next(err)
+    next(err);
   }
 });
 
@@ -95,7 +73,7 @@ router.put('/checkout/:id', async (req, res, next) => {
   try{
     const {id} = req.params;
     const ordersToClose = await Order.findAll({where: {
-    foreignKey: id,
+    userId: id,
     status: open
   }});
   await ordersToClose.update({status: closed});
@@ -106,16 +84,47 @@ router.put('/checkout/:id', async (req, res, next) => {
   }
 });
 
-//route to remove an item from a cart (open order)
-router.delete('/removeitem/:itemId', async (req, res, next) => {
+//add item to cart:
+router.put('/addToCart/:productId', async (req, res, next) => {
   try{
-    const {itemId} = req.params;
-    const item = await Order_Products.findByPk(itemId, {where:{
-      status: 'open' //put status to open to make sure we don't delete orders that are closed (past orders)
-    }});
-    await item.destroy();
-    res.send(item);
+  const {userId} = req.body;
+  const {productId} = req.params;
+  const product = await Product.findByPk(productId);
+  const order = await Order.findOne({where: {userId: userId, status:'open', include:{
+    Order_Products
+  }}});
+  await order.addProduct(product);
+  res.send(order);
   }catch(err){
-    next(err)
+    next(err);
+  }
+});
+
+// //route to remove an item from a cart (open order)
+// router.delete('/removeitem/:itemId', async (req, res, next) => {
+//   try{
+//     const {itemId} = req.params;
+//     const item = await Order_Products.findByPk(itemId, {where:{
+//       status: 'open' //put status to open to make sure we don't delete orders that are closed (past orders)
+//     }});
+//     await item.destroy();
+//     res.send(item);
+//   }catch(err){
+//     next(err)
+//   }
+// });
+//removing an item
+router.put('/removeItem/:productId', async (req, res, next) => {
+  try{
+  const {userId} = req.body;
+  const {productId} = req.params;
+  const product = await Product.findByPk(productId);
+  const order = await Order.findOne({where: {userId: userId, status:'open', include:{
+    Order_Products
+  }}});
+  await order.removeProduct(product);
+  res.send(order);
+  }catch(err){
+    next(err);
   }
 });
