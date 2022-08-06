@@ -2,7 +2,8 @@ const Sequelize = require("sequelize");
 const db = require("../db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const axios = require("axios");
+const Order = require("./Order");
+const Product = require("./Product");
 
 const SALT_ROUNDS = 5;
 
@@ -86,6 +87,27 @@ User.findByToken = async function (token) {
     error.status = 401;
     throw error;
   }
+};
+
+/**
+ * instanceMethods
+ */
+
+User.prototype.getCart = async function () {
+  let cart = await Order.findAll({
+    where: {
+      userId: this.id,
+      status: "open",
+    },
+  });
+  if (!cart) {
+    await Order.create({ userId: this.id, status: "open" });
+  }
+  return await Order.findByPk(cart.id, {
+    include: {
+      model: Product,
+    },
+  });
 };
 
 /**

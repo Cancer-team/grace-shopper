@@ -54,7 +54,9 @@ class CartItem extends React.Component {
         <input onChange={handleQuantity} value={this.state.quantity}>
           {this.state.quantity}
         </input>
-        <button type="button">-</button>
+        <button type="button" onClick={decreaseQuantity}>
+          -
+        </button>
       </div>
     );
   }

@@ -24,7 +24,7 @@ class Cart extends React.Component {
     const cart = this.props.cart[0] || [];
     const products = cart.products || [];
     return (
-      <div>
+      <ul>
         {products.map((product, index) => {
           return (
             <CartItem
@@ -36,7 +36,7 @@ class Cart extends React.Component {
           );
         })}
         <h4>Total: ${this.state.total}</h4>
-      </div>
+      </ul>
     );
   }
 }
@@ -50,7 +50,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getCart: (userId) => dispatch(getCart(userId)),
+    getCart: () => dispatch(getCart()),
   };
 };
 

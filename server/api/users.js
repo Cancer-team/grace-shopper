@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const {
-  models: { User, Order_Products, Product, Order },
+  models: { User, Product, Order },
 } = require("../db");
 module.exports = router;
 
@@ -19,32 +19,23 @@ router.get("/", async (req, res, next) => {
 });
 
 //viewing cart
-router.get("/viewcart/:userId", async (req, res, next) => {
+router.get("/cart", async (req, res, next) => {
   try {
-    const { userId } = req.params;
-    const openOrders = await Order.findAll({
-      where: {
-        userId,
-        status: "open",
-      },
-      include: {
-        model: Product,
-      },
-    });
-    res.send(openOrders);
+    const user = await User.ByToken(req.headers.authorization);
+    res.send(await user.getCart());
   } catch (err) {
     next(err);
   }
 });
 
 //view all closed orders of a user
-router.get("/vieworders/:userId", async (req, res, next) => {
+router.get("/orders", async (req, res, next) => {
   try {
-    const { userId } = req.params;
+    const user = await User.ByToken(req.headers.authorization);
     const closedOrders = await Order.findAll({
       where: {
         status: "closed",
-        userId,
+        userId: user.id,
       },
       include: {
         model: Product,
@@ -84,12 +75,12 @@ router.post("/newUser", async (req, res, next) => {
 });
 
 //route to set order status from open to closed:
-router.put("/checkout/:id", async (req, res, next) => {
+router.put("/checkout", async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const user = await User.ByToken(req.headers.authorization);
     const ordersToClose = await Order.findOne({
       where: {
-        userId: id,
+        userId: user.id,
         status: "open",
       },
     });
@@ -102,7 +93,7 @@ router.put("/checkout/:id", async (req, res, next) => {
 
 //add item to cart:
 // Quick question - Do we actually need this route? Since we are going to make an as
-router.put("/addToCart/:productId", async (req, res, next) => {
+router.put("/cart", async (req, res, next) => {
   try {
     const { userId } = req.body;
     const { productId } = req.params;
