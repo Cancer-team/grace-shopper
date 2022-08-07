@@ -17,14 +17,16 @@ const _getCart = (cart) => ({
 //   item,
 // });
 // Thunks
-export const getCart = () => async (dispatch) => {
+export const fetchCart = () => {
   const token = window.localStorage.getItem(TOKEN);
-  const res = await axios.get("api/cart", {
-    headers: {
-      authorization: token,
-    },
-  });
-  return dispatch(_getCart(res.data));
+  return async (dispatch) => {
+    const { data: cart } = await axios.get("/api/users/cart", {
+      headers: {
+        authorization: token,
+      },
+    });
+    dispatch(_getCart(cart));
+  };
 };
 
 // export const removeItem = (productId) => {

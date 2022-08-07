@@ -1,41 +1,28 @@
-import { render } from "enzyme";
 import React from "react";
 import { connect } from "react-redux";
-import { getCart } from "../store/order";
 
 /**
  * COMPONENT
  */
-class Home extends React.Component {
-  componentDidMount() {
-    this.props.getCart();
-  }
+export const Home = (props) => {
+  const { email } = props;
+  console.log(props.auth);
 
-  render() {
-    const { email, auth } = this.props;
-    console.log(auth);
-    return (
-      <div>
-        <h3>Welcome, {email}</h3>
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <h3>Welcome, {email}</h3>
+    </div>
+  );
+};
 
 /**
  * CONTAINER
  */
-const mapStateToProps = (state) => {
+const mapState = (state) => {
   return {
     email: state.auth.email,
     auth: state.auth,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getCart: () => dispatch(getCart()),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapState)(Home);

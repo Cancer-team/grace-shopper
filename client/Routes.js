@@ -10,7 +10,7 @@ import Checkout from "./components/Checkout";
 import Payment from "./components/Payment";
 import Cart from "./components/Cart";
 import { fetchProducts } from "./store/allProducts";
-import { getCart } from "./store/order";
+import { fetchCart } from "./store/order";
 
 /**
  * COMPONENT
@@ -23,7 +23,7 @@ class Routes extends Component {
 
   componentDidUpdate(prevProps) {
     if (!prevProps.isLoggedIn && this.props.isLoggedIn) {
-      this.props.getCart();
+      this.props.fetchCart();
     }
   }
 
@@ -81,7 +81,7 @@ const mapDispatch = (dispatch) => {
     loadInitialData() {
       dispatch(me());
     },
-    getCart: () => dispatch(getCart()),
+    fetchCart: () => dispatch(fetchCart()),
     fetchProducts: () => dispatch(fetchProducts()),
   };
 };

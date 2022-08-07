@@ -21,8 +21,9 @@ router.get("/", async (req, res, next) => {
 //viewing cart
 router.get("/cart", async (req, res, next) => {
   try {
-    const user = await User.ByToken(req.headers.authorization);
-    res.send(await user.getCart());
+    const user = await User.findByToken(req.headers.authorization);
+    const cart = await user.getCart();
+    res.send(cart);
   } catch (err) {
     next(err);
   }
@@ -31,7 +32,7 @@ router.get("/cart", async (req, res, next) => {
 //view all closed orders of a user
 router.get("/orders", async (req, res, next) => {
   try {
-    const user = await User.ByToken(req.headers.authorization);
+    const user = await User.findByToken(req.headers.authorization);
     const closedOrders = await Order.findAll({
       where: {
         status: "closed",
@@ -77,7 +78,7 @@ router.post("/newUser", async (req, res, next) => {
 //route to set order status from open to closed:
 router.put("/checkout", async (req, res, next) => {
   try {
-    const user = await User.ByToken(req.headers.authorization);
+    const user = await User.findByToken(req.headers.authorization);
     const ordersToClose = await Order.findOne({
       where: {
         userId: user.id,

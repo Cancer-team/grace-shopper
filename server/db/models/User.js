@@ -76,8 +76,8 @@ User.authenticate = async function ({ email, password }) {
 
 User.findByToken = async function (token) {
   try {
-    const { id } = await jwt.verify(token, process.env.JWT);
-    const user = User.findByPk(id);
+    const { id } = jwt.verify(token, process.env.JWT);
+    const user = await User.findByPk(id);
     if (!user) {
       throw "nooo";
     }
@@ -94,16 +94,17 @@ User.findByToken = async function (token) {
  */
 
 User.prototype.getCart = async function () {
-  let cart = await Order.findAll({
-    where: {
-      userId: this.id,
-      status: "open",
-    },
+  const where = {
+    userId: this.id,
+    status: "open",
+  };
+  let cart = await Order.findOne({
+    where,
   });
   if (!cart) {
-    await Order.create({ userId: this.id, status: "open" });
+    cart = await Order.create(where);
   }
-  return await Order.findByPk(cart.id, {
+  return Order.findByPk(cart.id, {
     include: {
       model: Product,
     },
