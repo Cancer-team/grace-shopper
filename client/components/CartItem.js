@@ -74,14 +74,6 @@ class CartItem extends React.Component {
   }
 }
 
-
-const mapStateToProps = (state) => {
-  return {
-    order: state.order,
-  };
-};
-
-
 const mapDispatchToProps = (dispatch) => {
   return {
     getProduct: (id) => dispatch(fetchProduct(id)),
