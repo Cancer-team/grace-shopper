@@ -52,9 +52,9 @@ class CartItem extends React.Component {
   }
 
   render() {
-    const product = this.props.product;
-    const { quantity } = this.state;
-    console.log(product);
+    const products = this.props.order.products;
+    console.log(products)
+   
     const { increaseQuantity, decreaseQuantity, handleQuantity } = this;
     return (
       <div>
@@ -78,8 +78,9 @@ class CartItem extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log("stateBeforeMapStateToProps", state)
   return {
-    product: state.product,
+    order: state.order,
   };
 };
 
