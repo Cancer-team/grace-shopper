@@ -1,14 +1,23 @@
 import axios from "axios";
 
+const TOKEN = "token";
+
+// ACTIONS
 const FETCH_SINGLE_PRODUCT = "FETCH_SINGLE_PRODUCT";
+const ADD_ITEM = "ADD_ITEM";
 
-const setProduct = (product) => {
-  return {
-    type: FETCH_SINGLE_PRODUCT,
-    product,
-  };
-};
+// ACTION CREATORS
+const setProduct = (product) => ({
+  type: FETCH_SINGLE_PRODUCT,
+  product,
+});
 
+const _addItem = (product) => ({
+  type: ADD_ITEM,
+  product,
+});
+
+// THUNKS
 export const fetchProduct = (productId) => {
   return async (dispatch) => {
     const { data: product } = await axios.get(`/api/products/${productId}`);
@@ -16,14 +25,19 @@ export const fetchProduct = (productId) => {
   };
 };
 
-export const addProductToCart = (productId, userId) => {
+export const addItem = (product) => {
+  const token = window.localStorage.getItem(TOKEN);
   return async function (dispatch) {
-    const response = await axios.put(
-      `/api/products/addToCart/${productId}`,
-      userId
+    const { data: newItem } = await axios.put(
+      `/api/users/addToCart/`,
+      product,
+      {
+        headers: {
+          authorization: token,
+        },
+      }
     );
-    const product = response.data;
-    dispatch(setProduct(product));
+    dispatch(_addItem(newItem));
   };
 };
 
@@ -32,6 +46,8 @@ const initialState = {};
 export default function singleProductReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_SINGLE_PRODUCT:
+      return action.product;
+    case ADD_ITEM:
       return action.product;
     default:
       return state;

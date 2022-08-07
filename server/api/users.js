@@ -69,7 +69,8 @@ router.post("/newUser", async (req, res, next) => {
       shippingAddress,
       billingAddress,
     });
-    res.send(newUser);
+    await newUser.getCart();
+    res.status(201).send(newUser);
   } catch (err) {
     next(err);
   }
@@ -94,42 +95,21 @@ router.put("/checkout", async (req, res, next) => {
 
 //add item to cart:
 // Quick question - Do we actually need this route? Since we are going to make an as
-router.put("/cart", async (req, res, next) => {
+router.put("/addTocart", async (req, res, next) => {
   try {
-    const { userId } = req.body;
-    const { productId } = req.params;
-    const product = await Product.findByPk(productId);
-    const cart = await Order.findOne({
-      where: {
-        userId,
-        status: "open",
-      },
-      include: {
-        model: Product,
-      },
-    });
-    await cart.addProduct(product);
+    const user = await User.findByToken(req.headers.authorization);
+    const cart = await user.addToCart(req.body);
     res.send(cart);
   } catch (err) {
     next(err);
   }
 });
+
 //remove item from cart
-router.put("/removeItem/:productId", async (req, res, next) => {
+router.put("/removeToCart", async (req, res, next) => {
   try {
-    const { userId } = req.body;
-    const { productId } = req.params;
-    const product = await Product.findByPk(productId);
-    const cart = await Order.findOne({
-      where: {
-        userId,
-        status: "open",
-      },
-      include: {
-        model: Product,
-      },
-    });
-    await cart.removeProduct(product);
+    const user = await User.findByToken(req.headers.authorization);
+    const cart = await user.removeFromCart(req.body);
     res.send(cart);
   } catch (err) {
     next(err);

@@ -111,6 +111,25 @@ User.prototype.getCart = async function () {
   });
 };
 
+User.prototype.addToCart = async function (product) {
+  const cart = this.getCart();
+  let newItem = cart.products.find((item) => item.id === product.id);
+  if (newItem) {
+    newItem.Order_Product.quantity++;
+    // let unitPrice = (newItem.Order_Product.quantity * newItem.price) / 100
+    // newItem.Order_Product.unitPrice = unitPrice
+  } else {
+    await cart.addProduct(product);
+  }
+  return this.getcart();
+};
+
+User.prototype.removeFromCart = async function (product) {
+  const cart = this.getCart();
+  await cart.removeProduct(product);
+  return this.getCart();
+};
+
 /**
  * hooks
  */
