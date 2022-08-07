@@ -2,6 +2,7 @@ const Sequelize = require("sequelize");
 const db = require("../db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+
 const Order = require("./Order");
 const Product = require("./Product");
 
@@ -76,8 +77,10 @@ User.authenticate = async function ({ email, password }) {
 
 User.findByToken = async function (token) {
   try {
+
     const { id } = jwt.verify(token, process.env.JWT);
     const user = await User.findByPk(id);
+
     if (!user) {
       throw "nooo";
     }
@@ -88,6 +91,7 @@ User.findByToken = async function (token) {
     throw error;
   }
 };
+
 
 /**
  * instanceMethods
@@ -116,10 +120,11 @@ User.prototype.addToCart = async function (product) {
   let newItem = cart.products.find((item) => item.id === product.id);
   if (newItem) {
     newItem.Order_Product.quantity++;
-    // let unitPrice = (newItem.Order_Product.quantity * newItem.price) / 100
-    // newItem.Order_Product.unitPrice = unitPrice
+    // let totalPrice = (newItem.Order_Product.quantity * newItem.price)
+    // newItem.Order_Product.totalPrice = totalPrice
   } else {
     await cart.addProduct(product);
+    // save newItem.Order_Product.unitPrice = product.price
   }
   return this.getcart();
 };
@@ -129,6 +134,7 @@ User.prototype.removeFromCart = async function (product) {
   await cart.removeProduct(product);
   return this.getCart();
 };
+
 
 /**
  * hooks

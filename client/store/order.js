@@ -5,13 +5,16 @@ const TOKEN = "token";
 // Actions
 const GET_CART = "GET_CART";
 const REMOVE_ITEM = "REMOVE_ITEM";
+
 // const UPDATE_ORDER_PRODCUTS = "UPDATE_ORDER_PRODCUTS";
+
 
 // Action Creators
 const _getCart = (cart) => ({
   type: GET_CART,
   cart,
 });
+
 
 // const _updateOrderProducts = (update) => ({
 //   type: UPDATE_ORDER_PRODCUTS,
@@ -23,10 +26,12 @@ const _removeItem = (cart) => ({
   cart,
 });
 
+
 // Thunks
 export const fetchCart = () => {
   const token = window.localStorage.getItem(TOKEN);
   return async (dispatch) => {
+
     const { data: cart } = await axios.get("/api/users/cart", {
       headers: {
         authorization: token,
@@ -35,6 +40,7 @@ export const fetchCart = () => {
     dispatch(_getCart(cart));
   };
 };
+
 
 export const removeItem = (product) => {
   const token = window.localStorage.getItem(TOKEN);

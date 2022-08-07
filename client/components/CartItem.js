@@ -17,6 +17,7 @@ class CartItem extends React.Component {
   }
 
   increaseQuantity() {
+
     const { quantity, subTotal } = this.state;
     this.setState({ quantity: quantity + 1 });
     // const sum = (this.state.quantity * this.props.product.price) / 100;
@@ -29,11 +30,13 @@ class CartItem extends React.Component {
     // const sum = (this.state.quantity * this.props.product.price) / 100;
     // this.setState({ subTotal: sum });
     // this.props.totalSum(subTotal);
+
   }
 
   handleQuantity(evt) {
     this.setState({ quantity: evt.target.value });
   }
+
 
   //   componentDidMount() {
   //     const id = this.props.product.id;

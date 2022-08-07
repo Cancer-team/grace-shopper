@@ -74,6 +74,7 @@ async function seed() {
     })
   );
 
+
   const [
     product1,
     product2,
@@ -95,6 +96,7 @@ async function seed() {
     Product.create({ name: "50", price: 50, flavorText: "50" }),
     Product.create({ name: "81", price: 81, flavorText: "81" }),
   ]);
+
 
   const yjOrder1 = await yj.getCart();
   const yjOrder2 = await Order.create({ status: "closed", userId: 3 });

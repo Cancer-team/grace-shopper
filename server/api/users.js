@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const {
+
   models: { User, Product, Order },
+
 } = require("../db");
 module.exports = router;
 
@@ -19,17 +21,20 @@ router.get("/", async (req, res, next) => {
 });
 
 //viewing cart
+
 router.get("/cart", async (req, res, next) => {
   try {
     const user = await User.findByToken(req.headers.authorization);
     const cart = await user.getCart();
     res.send(cart);
+
   } catch (err) {
     next(err);
   }
 });
 
 //view all closed orders of a user
+
 router.get("/orders", async (req, res, next) => {
   try {
     const user = await User.findByToken(req.headers.authorization);
@@ -37,6 +42,7 @@ router.get("/orders", async (req, res, next) => {
       where: {
         status: "closed",
         userId: user.id,
+
       },
       include: {
         model: Product,
@@ -69,14 +75,18 @@ router.post("/newUser", async (req, res, next) => {
       shippingAddress,
       billingAddress,
     });
+
     await newUser.getCart();
     res.status(201).send(newUser);
+
+
   } catch (err) {
     next(err);
   }
 });
 
 //route to set order status from open to closed:
+
 router.put("/checkout", async (req, res, next) => {
   try {
     const user = await User.findByToken(req.headers.authorization);
@@ -95,10 +105,12 @@ router.put("/checkout", async (req, res, next) => {
 
 //add item to cart:
 // Quick question - Do we actually need this route? Since we are going to make an as
+
 router.put("/addTocart", async (req, res, next) => {
   try {
     const user = await User.findByToken(req.headers.authorization);
     const cart = await user.addToCart(req.body);
+
     res.send(cart);
   } catch (err) {
     next(err);
@@ -106,10 +118,12 @@ router.put("/addTocart", async (req, res, next) => {
 });
 
 //remove item from cart
+
 router.put("/removeToCart", async (req, res, next) => {
   try {
     const user = await User.findByToken(req.headers.authorization);
     const cart = await user.removeFromCart(req.body);
+
     res.send(cart);
   } catch (err) {
     next(err);
