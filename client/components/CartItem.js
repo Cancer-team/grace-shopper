@@ -49,9 +49,9 @@ class CartItem extends React.Component {
   // }
 
   render() {
-    const products = this.props.order.products;
-    console.log(products)
-   
+    const product = this.props.product;
+    const { quantity } = this.state;
+    console.log(product);
     const { increaseQuantity, decreaseQuantity, handleQuantity } = this;
     return (
       <div>
