@@ -103,30 +103,23 @@ router.put("/checkout", async (req, res, next) => {
 router.post("/addToCart", async (req, res, next) => {
   try {
     const user = await User.findByToken(req.headers.authorization);
-    let cart = await user.getCart();
-    let cartId = cart.dataValues.id;
-
-    // ORDER
-    cart = await Order.findByPk(cartId, {
-      include: {
-        model: Product
-      }
-    });
- 
-    let productsInCartIDs = cart.products.map(product => product.dataValues.id);
-   
-
-    // PRODUCT
     let addThisProductToCart = req.body;
     let productId = addThisProductToCart.id;
-    const productInfo = await Product.findByPk(productId);
-    const product = productInfo.dataValues;
+    let product = await user.getProduct(productId);
+    const currentQty = product.dataValues.orders[0].dataValues.Order_Product.dataValues.quantity
+    let cart = await user.getCart();
+    let cartId = cart.dataValues.id;
+    let productsInCartIDs = cart.products.map(product => product.dataValues.id);
     
+
+    // PRODUCT
     let productIsInTheCartAlready = productsInCartIDs.includes(product.id);
-    
-    if (!productIsInTheCartAlready) {
-      let updatedCart = await cart.addProduct(productInfo);
+    if (!productIsInTheCartAlready) { cart.addProduct(product) }
+    else {
+      // let currentQuantity = 
+      cart.addProduct(product, {through: {quantity: currentQty + 1}})
     }
+ 
     
     //
     // if (!cartProducts.includes(req.body)) 

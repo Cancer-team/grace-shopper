@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 
 const Order = require("./Order");
 const Product = require("./Product");
+const Order_Products = require("../index");
 
 const SALT_ROUNDS = 5;
 
@@ -113,9 +114,17 @@ User.prototype.getCart = async function () {
   });
 };
 
+User.prototype.getProduct = async function (productId) {
+  return Product.findByPk(productId, {
+    include: {
+      model: Order
+    }
+  });
+};
+
+
 User.prototype.addToCart = async function (product) {
   const cart = this.getCart();
-  console.log("cart", cart)
   let newItem = cart.products.find((item) => item.id === product.id);
   if (newItem) {
     newItem.Order_Product.quantity++;
