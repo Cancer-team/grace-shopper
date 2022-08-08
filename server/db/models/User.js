@@ -122,21 +122,24 @@ User.prototype.getProduct = async function (productId) {
   });
 };
 
+User.prototype.getCurrentQty = async function (product, cart) {
+  const currentQty = product.dataValues.orders[0].dataValues.Order_Product.dataValues.quantity;
+  return currentQty
+}
 
-User.prototype.addToCart = async function (product) {
-  const cart = this.getCart();
-  let newItem = cart.products.find((item) => item.id === product.id);
-  if (newItem) {
-    newItem.Order_Product.quantity++;
-    await cart.save();
-    // let totalPrice = (newItem.Order_Product.quantity * newItem.price)
-    // newItem.Order_Product.totalPrice = totalPrice
-  } else {
-    await cart.addProduct(product);
-    // save newItem.Order_Product.unitPrice = product.price
-  }
-  return this.getCart();
-};
+
+User.prototype.addToCart = async function (productId) {
+    let cart = await this.getCart();
+    let product = await this.getProduct(productId);
+    let cardId = cart.dataValues.id;
+    let productsInCartIDs = cart.products.map(product => product.dataValues.id);
+    let productIsNotInCartAlready = !productsInCartIDs.includes(productId);
+  if (productIsNotInCartAlready) { cart.addProduct(product) }
+    else {
+      const currentQty = await this.getCurrentQty(product, cart);
+      cart.addProduct(product, {through: {quantity: currentQty + 1}})
+    }
+}
 
 User.prototype.removeFromCart = async function (product) {
   const cart = this.getCart();
