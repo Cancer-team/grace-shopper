@@ -26,6 +26,7 @@ class CartItem extends React.Component {
   selectSubtotal(evt) {
     let quantity = Number([evt.target.value]);
     const sum = (quantity * this.props.product.price) / 100;
+
     this.setState({ subTotal: sum });
     this.props.totalSum(sum);
   }
