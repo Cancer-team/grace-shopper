@@ -1,6 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-import { fetchProduct, addItem, deleteProduct } from "../store/singleProduct";
+import { fetchProduct, deleteProduct } from "../store/singleProduct";
+import { addItem } from "../store/order";
+import { addToGuestCart } from "../store/order";
+
 
 export class SingleProduct extends React.Component {
   constructor(){
@@ -26,6 +29,7 @@ export class SingleProduct extends React.Component {
     // let userType = this.state.auth.userType || '';
     console.log('THIS props in render', this.props);
     const product = this.props.product;
+
     if(!product){
       return <div>Pokemon Deleted! Go back to all products...
       </div>
@@ -52,11 +56,36 @@ export class SingleProduct extends React.Component {
     }
     
    ;}}
+/* needs to be resolved when final singleProduct Component!!!!!!!!!!!!!!!!!!!!!!
+this was the main:
+    const isLoggedIn = this.props.isLoggedIn
+
+    return (
+      <div>
+      {isLoggedIn ?
+      <div>
+        {" "}
+        Product Name: {product.name}
+        <button onClick={() => this.props.addItem(product)}>Add to Cart</button>
+      </div> 
+      : 
+      <div>
+      {" "}
+      Product Name: {product.name}
+      <button onClick={() => this.props.addToGuestCart(product)}>Add to Cart</button>
+    </div> 
+    }
+    </div>
+    )
+  }
+}
+*/
 
 const mapState = (state) => {
   return {
     product: state.product,
     user: state.auth
+    isLoggedIn: !!state.auth.id
   };
 };
 
@@ -65,6 +94,7 @@ const mapDispatch = (dispatch) => {
     fetchProduct: (productId) => dispatch(fetchProduct(productId)),
     addItem: (product) => dispatch(addItem(product)),
     deleteProduct: (product) => dispatch(deleteProduct(product))
+    addToGuestCart: (guestCart) => dispatch(addToGuestCart(guestCart))
   };
 };
 
