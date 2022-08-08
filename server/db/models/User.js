@@ -131,13 +131,15 @@ User.prototype.getCurrentQty = async function (product, cart) {
 User.prototype.addToCart = async function (productId) {
     let cart = await this.getCart();
     let product = await this.getProduct(productId);
-    let cardId = cart.dataValues.id;
     let productsInCartIDs = cart.products.map(product => product.dataValues.id);
     let productIsNotInCartAlready = !productsInCartIDs.includes(productId);
-  if (productIsNotInCartAlready) { cart.addProduct(product) }
+  if (productIsNotInCartAlready) { cart.addProduct(product, {through: {quantity: 1, unitPrice: product.price, totalPrice: product.price}}) }
     else {
-      const currentQty = await this.getCurrentQty(product, cart);
-      cart.addProduct(product, {through: {quantity: currentQty + 1}})
+      const currentQtyInCart = await this.getCurrentQty(product, cart);
+      const updatedQty = currentQtyInCart + 1;
+      const updatedPrice = product.price;
+      const updatedTotalPrice = updatedQty * updatedPrice;
+      cart.addProduct(product, {through: {quantity: updatedQty, unitPrice: updatedPrice, totalPrice: updatedTotalPrice}})
     }
 }
 

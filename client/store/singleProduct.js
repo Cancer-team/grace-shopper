@@ -26,7 +26,6 @@ export const fetchProduct = (productId) => {
 };
 
 export const addItem = (product) => {
-  console.log(product);
   const token = window.localStorage.getItem(TOKEN);
   return async function (dispatch) {
     const response = await axios.post(
@@ -38,7 +37,7 @@ export const addItem = (product) => {
         },
       }
     );
-    console.log("response", response )
+  
     // dispatch(_addItem(newItem));
   };
 };
