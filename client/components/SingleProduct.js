@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { fetchProduct, addItem } from "../store/singleProduct";
+import { fetchProduct } from "../store/singleProduct";
+import { addItem } from "../store/order";
 
 export class SingleProduct extends React.Component {
   componentDidMount() {
@@ -9,6 +10,7 @@ export class SingleProduct extends React.Component {
   }
   render() {
     const product = this.props.product;
+    console.log(product);
     return (
       <div>
         {" "}
