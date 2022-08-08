@@ -104,7 +104,8 @@ router.post("/addToCart", async (req, res, next) => {
   try {
     const user = await User.findByToken(req.headers.authorization);
     const productId = req.body.id;
-    res.send(await user.addToCart(productId));
+    await user.addToCart(productId);
+ res.send('hi')
   } catch (err) {
     next(err);
   }
@@ -117,19 +118,6 @@ router.put("/removeToCart", async (req, res, next) => {
     const user = await User.findByToken(req.headers.authorization);
     const cart = await user.removeFromCart(req.body);
     res.send(cart);
-  } catch (err) {
-    next(err);
-  }
-});
-
-//update Order_Product
-
-router.post("/updateOrderProduct", async (req, res, next) => {
-  try {
-    const user = await User.findByToken(req.headers.authorization);
-    const { product, updateInfo } = req.body;
-    const newCart = await user.updateOrderProduct(product, updateInfo);
-    res.send(newCart);
   } catch (err) {
     next(err);
   }
