@@ -18,6 +18,7 @@ export class SingleProduct extends React.Component {
   componentDidMount() {
     const productId = this.props.match.params.productId;
     this.props.fetchProduct(productId);
+    this.setState(this.props.product)
   }
   addedToCart(){
     const productItem = {
@@ -81,7 +82,7 @@ export class SingleProduct extends React.Component {
     window.location.reload();
   }
   render() {
-    const product = this.props.product;
+    const product = this.props.product || {};
     if(!product){
       return <div>Pokemon Deleted! Go back to all products...
       </div>
