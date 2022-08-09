@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const Order = require("./Order");
 const Product = require("./Product");
 const Order_Products = require("./Order_Products");
+const sequelize = require("sequelize");
 
 const SALT_ROUNDS = 5;
 
@@ -155,6 +156,51 @@ User.prototype.addToCart = async function (productId) {
   return this.getCart();
 };
 
+// User.prototype.addToCart = async function (product) {
+//   const cart = await this.getCart();
+//   const item = await Product.findByPk(product.id, {
+//     include: {
+//       model: Order,
+//       where: {
+//         orderId: cart.id,
+//       },
+//     },
+//   });
+//   if (!item) {
+//     cart.addProduct(item, {
+//       through: {
+//         quantity: 1,
+//         unitPrice: product.price,
+//         totalPrice: product.price,
+//       },
+//     });
+//   } else {
+//     let quantity = item.orders[0].Order_Products.quantity + 1;
+//     const totalPrice = product.price * quantity;
+//     await Order_Products.update(
+//       { quantity: Sequelize.literal("quantity + 1"), totalPrice },
+//       {
+//         where: {
+//           orderId: cart.id,
+//           productId: product.id,
+//         },
+//       }
+//     );
+//   }
+//   return this.getCart();
+// };
+
+User.prototype.removeFromCart = async function (product) {
+  const cart = await this.getCart();
+  await Order_Products.destroy({
+    where: {
+      orderId: cart.id,
+      productId: product.id,
+    },
+  });
+  return this.getCart();
+};
+
 User.prototype.updateOrderProduct = async function (product, updateInfo) {
   const cart = await this.getCart();
   const { quantity, unitPrice, totalPrice } = updateInfo;
@@ -171,17 +217,6 @@ User.prototype.updateOrderProduct = async function (product, updateInfo) {
       },
     }
   );
-  return this.getCart();
-};
-
-User.prototype.removeFromCart = async function (product) {
-  const cart = await this.getCart();
-  await Order_Products.destroy({
-    where: {
-      orderId: cart.id,
-      productId: product.id,
-    },
-  });
   return this.getCart();
 };
 
