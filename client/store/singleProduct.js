@@ -4,7 +4,8 @@ const TOKEN = "token";
 
 // ACTIONS
 const FETCH_SINGLE_PRODUCT = "FETCH_SINGLE_PRODUCT";
-const DELETE_ITEM = "DELETE_ITEM";
+
+const DELETE_ITEM = 'DELETE_ITEM';
 
 // ACTION CREATORS
 const setProduct = (product) => ({
@@ -29,6 +30,7 @@ export const fetchProduct = (productId) => {
 
 export const deleteProduct = (product) => {
   return async (dispatch) => {
+
     const { data: deletedProduct } = await axios.delete(
       `/api/products/${product.id}`
     );

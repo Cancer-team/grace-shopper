@@ -52,6 +52,7 @@ class Cart extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log('state', state)
   return {
     cart: state.cart,
     auth: state.auth,

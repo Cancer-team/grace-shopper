@@ -25,6 +25,7 @@ const Navbar = ({ handleClick, isLoggedIn, cart, products }) => {
               <Link to="/home">Home</Link>
               <Link to="/products">Products({productsLength})</Link>
               <Link to="/cart">Cart({cartItems})</Link>
+              <Link to="/editInfo">Edit Your Info</Link>
               {/* Will update after user pages are created 
             <Link to={`/${user.email}/orders`}>Order History</Link>
             */}
