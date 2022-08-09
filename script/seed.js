@@ -19,7 +19,7 @@ async function seed() {
   // Creating cards
 
   const cards = await pokemon.card
-    .all({ q: "nationalPokedexNumbers:[1 to 25]" })
+    .all({ q: "nationalPokedexNumbers:[1 to 2]" })
     .then((cards) => {
       return cards;
     });
@@ -141,13 +141,20 @@ async function seed() {
     }),
   ]);
 
-  const yjOrder1 = await yj.getCart();
+  const yjOrder1 = await Order.create({ userId: yj.id });
+  await yjOrder1.addProducts([product1, product2, product5, product3]);
+  const yjCart = await yj.getCart();
+  yjCart.products[0].Order_Product.unitPrice = 2;
+  yjCart.save();
+  console.log("OrderProcufvtyrwhjth ", yjCart.products[0].Order_Product)
+
+
   const yjOrder2 = await Order.create({ status: "closed", userId: 3 });
   const ethanOrder1 = await ethan.getCart();
   const ethanOrder2 = await Order.create({ status: "closed", userId: 4 });
   const ethanOrder3 = await Order.create({ status: "closed", userId: 4 });
 
-  await yjOrder1.addProducts([product1, product2, product5, product3]);
+  
   await yjOrder2.addProducts([product6, product3, product5, product9]);
   await ethanOrder1.addProducts([
     product6,

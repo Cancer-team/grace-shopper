@@ -14,6 +14,7 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
             <Link to="/home">Home</Link>
             <Link to="/products">Products</Link>
             <Link to="/cart">Cart</Link>
+            <Link to="/editInfo">Edit Your Info</Link>
             {/* Will update after user pages are created 
             <Link to={`/${user.email}/orders`}>Order History</Link>
              */}

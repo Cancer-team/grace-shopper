@@ -25,6 +25,7 @@ class Cart extends React.Component {
   //   }
   render() {
     const products = this.props.cart.products || [];
+    console.log('products in render', products);
     return (
       <ul>
         {products.map((product, index) => {
@@ -46,6 +47,7 @@ class Cart extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log('state', state)
   return {
     cart: state.order,
     auth: state.auth,
