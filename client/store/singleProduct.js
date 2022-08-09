@@ -6,6 +6,8 @@ const TOKEN = "token";
 const FETCH_SINGLE_PRODUCT = "FETCH_SINGLE_PRODUCT";
 
 const DELETE_ITEM = 'DELETE_ITEM';
+const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
+
 
 // ACTION CREATORS
 const setProduct = (product) => ({
@@ -19,6 +21,13 @@ const deleteItem = (product) => {
     product,
   };
 };
+
+const updateProduct = (product) => {
+  return {
+    type: UPDATE_PRODUCT,
+    product
+  }
+}
 
 // THUNKS
 export const fetchProduct = (productId) => {
@@ -37,6 +46,14 @@ export const deleteProduct = (product) => {
     dispatch(deleteItem(deletedProduct));
   };
 };
+
+export const updateProductThunk = (product) => {
+  return async (dispatch) => {
+    const {data: updatedProduct} = await axios.put('/api/products/update', product);
+    dispatch(updateProduct(updatedProduct));
+  }
+}
+
 const initialState = {};
 
 export default function singleProductReducer(state = initialState, action) {
@@ -45,6 +62,8 @@ export default function singleProductReducer(state = initialState, action) {
       return action.product;
     case DELETE_ITEM:
       return null;
+      case UPDATE_PRODUCT:
+        return action.product;
     default:
       return state;
   }
