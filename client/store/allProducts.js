@@ -4,6 +4,7 @@ import axios from "axios";
 const FETCH_ALL_PRODUCTS = "FETCH_ALL_PRODUCTS";
 const CREATE_PRODUCT = 'CREATE PRODUCT';
 
+
 // ACTION CREATORS
 const setProducts = (products) => {
   return { type: FETCH_ALL_PRODUCTS, products };
