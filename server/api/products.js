@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const {
-  models: { Product },
+  models: { Product, Order },
 } = require("../db");
 
 router.get("/", async (req, res, next) => {
@@ -23,5 +23,16 @@ router.get("/:productId", async (req, res, next) => {
     next(err);
   }
 });
+
+router.delete('/:id', async (req, res, next) => {
+  try{
+    const {id} = req.params;
+    const productToDestroy = await Product.findByPk(id);
+    await productToDestroy.destroy();
+    res.send(productToDestroy);
+  }catch(err){
+    next(err);
+  }
+})
 
 module.exports = router;

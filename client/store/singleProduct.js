@@ -5,6 +5,7 @@ const TOKEN = "token";
 // ACTIONS
 const FETCH_SINGLE_PRODUCT = "FETCH_SINGLE_PRODUCT";
 const ADD_ITEM = "ADD_ITEM";
+const DELETE_ITEM = 'DELETE_ITEM';
 
 // ACTION CREATORS
 const setProduct = (product) => ({
@@ -17,6 +18,13 @@ const _addItem = (product) => ({
   product,
 });
 
+const deleteItem = (product) => {
+  return {
+    type: DELETE_ITEM,
+    product
+  }
+}
+
 // THUNKS
 export const fetchProduct = (productId) => {
   return async (dispatch) => {
@@ -25,11 +33,18 @@ export const fetchProduct = (productId) => {
   };
 };
 
+export const deleteProduct = (product) => {
+  return async (dispatch) => {
+    const {data: deletedProduct} = await axios.delete(`/api/products/${product.id}`);
+    dispatch(deleteItem(deletedProduct));
+  }
+}
+
 export const addItem = (product) => {
   const token = window.localStorage.getItem(TOKEN);
   return async function (dispatch) {
-    const { data: newItem } = await axios.put(
-      `/api/users/addToCart/`,
+    const response = await axios.post(
+      `/api/users/addToCart`,
       product,
       {
         headers: {
@@ -37,7 +52,8 @@ export const addItem = (product) => {
         },
       }
     );
-    dispatch(_addItem(newItem));
+  
+    // dispatch(_addItem(newItem));
   };
 };
 
@@ -49,6 +65,8 @@ export default function singleProductReducer(state = initialState, action) {
       return action.product;
     case ADD_ITEM:
       return action.product;
+    case DELETE_ITEM:
+        return null;
     default:
       return state;
   }

@@ -1,47 +1,53 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchCart } from "../store/order";
+import { fetchCart, addToGuestCart } from "../store/order";
 import CartItem from "./CartItem";
 
 class Cart extends React.Component {
-
-  constructor(props) {
-    super(props);
-
+  constructor() {
+    super();
     this.state = {
       total: 0,
     };
-    this.totalSum = this.totalSum.bind(this);
   }
 
-  totalSum(subTotal) {
-    this.setState({ total: this.state.total + subTotal });
-  }
-
-  //   componentDidMount() {
-  //     this.props.fetchCart();
-  //     this.setState({ ...this.state, products: this.props.cart.products });
+  // componentDidMount() {
+  //   if (this.props.cart.product[0]) {
+  //     let total = this.props.cart.products.reduce(function (accum, obj) {
+  //       accum + obj.Order_Product.totalPrice;
+  //     }, 0);
+  //     this.setState({ total });
   //   }
+  // }
+
   render() {
-    const products = this.props.cart.products || [];
-    console.log('products in render', products);
+    let products = this.props.cart.products || [];
+    products = products.sort(function (a, b) {
+      return (
+        new Date(b.Order_Product.createdAt) -
+        new Date(a.Order_Product.createdAt)
+      );
+    });
+    console.log(products);
+    let total = products.reduce(function (accum, obj) {
+      const {
+        Order_Product: { totalPrice },
+      } = obj;
+      return accum + totalPrice;
+    }, 0);
     return (
-      <ul>
-        {products.map((product, index) => {
-          return (
-            <CartItem
-              product={product}
-              key={index}
-              total={this.state.total}
-              totalSum={this.totalSum}
-
-            />
-          );
-        })}
-        <h4>Total: ${this.state.total}</h4>
-      </ul>
-
+      <div>
+        <ul>
+          {products.map((product, index) => {
+            return <CartItem product={product} key={index} />;
+          })}
+          <h1>Total: ${total / 100}</h1>
+        </ul>
+        <Link to={"/checkout"}>
+          <button>Proceed to checkout</button>
+        </Link>
+      </div>
     );
   }
 }
@@ -49,7 +55,7 @@ class Cart extends React.Component {
 const mapStateToProps = (state) => {
   console.log('state', state)
   return {
-    cart: state.order,
+    cart: state.cart,
     auth: state.auth,
   };
 };
@@ -57,6 +63,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchCart: () => dispatch(fetchCart()),
+    addToGuestCart: (guestCart) => dispatch(addToGuestCart(guestCart)),
   };
 };
 

@@ -2,78 +2,98 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchProduct } from "../store/singleProduct";
+import { updateOrderProduct } from "../store/order";
 
 class CartItem extends React.Component {
   constructor(props) {
     super(props);
+    this.inputRef = React.createRef();
     this.state = {
       quantity: 1,
-      subTotal: 0,
-      product: this.props.product ? this.props.porduct : {},
+      unitPrice: this.props.product.price,
+      totalPrice: 1,
     };
-    this.increaseQuantity = this.increaseQuantity.bind(this);
-    this.decreaseQuantity = this.decreaseQuantity.bind(this);
     this.handleQuantity = this.handleQuantity.bind(this);
-  }
-
-  increaseQuantity() {
-    const { quantity, subTotal } = this.state;
-    this.setState({ quantity: quantity + 1 });
-    const sum = (this.state.quantity * this.props.product.price) / 100;
-    console.log('sum,', sum);
-    this.setState({ subTotal: sum });
-    this.props.totalSum(subTotal);
-  }
-  decreaseQuantity() {
-    const { quantity, subTotal } = this.state;
-    if (quantity === 1) {
-      //remove item from cart: need axios
-      console.log("removed item from cart");
-    }
-    this.setState({ quantity: quantity - 1 });
-    const sum = (this.state.quantity * this.props.product.price) / 100;
-    this.setState({ subTotal: sum });
-    this.props.totalSum(subTotal);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleQuantity(evt) {
-    this.setState({ quantity: evt.target.value });
+    let quantity = Number([evt.target.value]);
+    const totalPrice = quantity * this.props.product.price;
+    let updateInfo = {
+      quantity,
+      unitPrice: this.state.unitPrice,
+      totalPrice: totalPrice,
+    };
+    this.props.updateOrder(this.props.product, updateInfo);
+    this.setState({ quantity, totalPrice });
+  }
+
+  handleClick() {
+    let quantity = Number(this.inputRef.current.value);
+    const totalPrice = quantity * this.props.product.price;
+    let updateInfo = {
+      quantity,
+      unitPrice: this.state.unitPrice,
+      totalPrice: totalPrice,
+    };
+    this.props.updateOrder(this.props.product, updateInfo);
+    this.setState({ quantity, totalPrice });
   }
 
   componentDidMount() {
-    const id = this.props.product.id;
-    this.props.getProduct(id);
-    const sum = (this.state.quantity * this.props.product.price) / 100;
-    this.setState({ subTotal: sum });
-    this.props.totalSum(this.state.subTotal);
+    const quantity = this.props.product.Order_Product.quantity;
+    const totalPrice = quantity * this.props.product.price;
+    this.setState({ quantity, totalPrice });
   }
-  // componentDidUpdate(prevProps) {
-  //   if (!prevProps.product.id && this.props.product.id) {
-  //     this.props.getProduct(id);
-  //   }
-  // }
 
   render() {
-    const product = this.props.product;
-    const { quantity } = this.state;
-    console.log(product);
-    const { increaseQuantity, decreaseQuantity, handleQuantity } = this;
+    const { product } = this.props;
+    const { quantity, unitPrice, totalPrice } = this.state;
+    const { handleClick, handleQuantity } = this;
+    const renderCheck =
+      quantity < 10 ? (
+        <select
+          value={quantity}
+          onChange={(evt) => {
+            handleQuantity(evt);
+          }}
+        >
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10+</option>
+        </select>
+      ) : (
+        <div>
+          <input ref={this.inputRef} type="text" defaultValue={quantity} />
+          <button
+            onClick={() => {
+              handleClick();
+            }}
+          >
+            Update
+          </button>
+        </div>
+      );
+
     return (
       <div>
         <Link to={`/products/${product.id}`}>
           <img src={product.imageSmall} />
         </Link>
-        <button type="button" onClick={increaseQuantity}>
-          +
-        </button>
-        <form>
-          <input onChange={handleQuantity} value={quantity} />
-        </form>
-        {/* <h4>{this.state.quantity}</h4> */}
-        <button type="button" onClick={decreaseQuantity}>
-          -
-        </button>
-        <h4>Subtotal: ${this.state.subTotal}</h4>
+        <label>Quantity:</label>
+        {renderCheck}
+        <br />
+        <br />
+        <span>Unit Price: ${unitPrice / 100}</span>
+        <h3>Subtotal: ${totalPrice / 100}</h3>
       </div>
     );
   }
@@ -82,6 +102,8 @@ class CartItem extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     getProduct: (id) => dispatch(fetchProduct(id)),
+    updateOrder: (product, updateInfo) =>
+      dispatch(updateOrderProduct(product, updateInfo)),
   };
 };
 
