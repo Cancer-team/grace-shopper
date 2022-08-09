@@ -4,6 +4,7 @@ const TOKEN = "token";
 
 // ACTIONS
 const FETCH_SINGLE_PRODUCT = "FETCH_SINGLE_PRODUCT";
+
 const DELETE_ITEM = 'DELETE_ITEM';
 
 // ACTION CREATORS
@@ -12,13 +13,12 @@ const setProduct = (product) => ({
   product,
 });
 
-
 const deleteItem = (product) => {
   return {
     type: DELETE_ITEM,
-    product
-  }
-}
+    product,
+  };
+};
 
 // THUNKS
 export const fetchProduct = (productId) => {
@@ -30,11 +30,14 @@ export const fetchProduct = (productId) => {
 
 export const deleteProduct = (product) => {
   return async (dispatch) => {
-    const {data: deletedProduct} = await axios.delete(`/api/products/${product.id}`);
-    dispatch(deleteItem(deletedProduct));
-  }
-}
 
+
+    const { data: deletedProduct } = await axios.delete(
+      `/api/products/${product.id}`
+    );
+    dispatch(deleteItem(deletedProduct));
+  };
+};
 
 const initialState = {};
 
@@ -43,7 +46,7 @@ export default function singleProductReducer(state = initialState, action) {
     case FETCH_SINGLE_PRODUCT:
       return action.product;
     case DELETE_ITEM:
-        return null;
+      return null;
     default:
       return state;
   }

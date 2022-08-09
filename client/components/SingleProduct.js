@@ -1,9 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import { fetchProduct, deleteProduct } from "../store/singleProduct";
 import { addItem } from "../store/order";
-import { addToGuestCart } from "../store/order";
 
 export class SingleProduct extends React.Component {
   constructor() {
@@ -14,6 +12,7 @@ export class SingleProduct extends React.Component {
     //   }
     // }
     this.isAdmin = this.isAdmin.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
   componentDidMount() {
     const productId = this.props.match.params.productId;
@@ -75,25 +74,33 @@ export class SingleProduct extends React.Component {
   isAdmin(userType) {
     return userType === "admin" ? true : false;
   }
+
+  handleClick() {
+    this.props.deleteProduct(this.props.product);
+    window.location.reload();
+  }
   render() {
     const product = this.props.product;
-    const isLoggedIn = this.props.isLoggedIn;
-
-    if (!product) {
-      return <div>Pokemon Deleted! Go back to all products...</div>;
+    if(!product){
+      return <div>Pokemon Deleted! Go back to all products...
+      </div>
     }
     if (this.props.user.userType === "admin") {
       return (
         <div>
           <img src={product.imageSmall}></img>
           <h1>Product Name: {product.name}</h1>
-          <h2>{product.price}</h2>
+          <h2>{product.price / 100}</h2>
           <button type="button" onClick={() => this.props.addItem(product)}>
             Add to Cart
           </button>
           <button
             type="button"
-            onClick={() => this.props.deleteProduct(product)}
+            onClick={() => {
+              // this.props.deleteProduct(product);
+              // window.location.reload();
+              this.handleClick();
+            }}
           >
             DELETE ITEM FROM DATABASE
           </button>
@@ -115,43 +122,13 @@ export class SingleProduct extends React.Component {
         </div>
       );
     }
-  }
-}
-/* needs to be resolved when final singleProduct Component!!!!!!!!!!!!!!!!!!!!!!
-this was the main:
-    const isLoggedIn = this.props.isLoggedIn
-    return (
-      <div>
-        {isLoggedIn ? (
-          <div>
-            {" "}
-            Product Name: {product.name}
-            <Link to={"/cart"}>
-              <button onClick={() => this.props.addItem(product)}>
-                Add to Cart
-              </button>
-            </Link>
-          </div>
-        ) : (
-          <div>
-            {" "}
-            Product Name: {product.name}
-            <button onClick={() => this.props.addToGuestCart(product)}>
-              Add to Cart
-            </button>
-          </div>
-        )}
-      </div>
-    );
-  }
-}
-*/
+   ;}}
+
 
 const mapState = (state) => {
   return {
     product: state.product,
-    user: state.auth,
-    isLoggedIn: !!state.auth.id,
+    user: state.auth
   };
 };
 
@@ -159,8 +136,7 @@ const mapDispatch = (dispatch) => {
   return {
     fetchProduct: (productId) => dispatch(fetchProduct(productId)),
     addItem: (product) => dispatch(addItem(product)),
-    addToGuestCart: (product) => dispatch(addToGuestCart(product)),
-    deleteProduct: (product) => dispatch(deleteProduct(product)),
+    deleteProduct: (product) => dispatch(deleteProduct(product))
   };
 };
 

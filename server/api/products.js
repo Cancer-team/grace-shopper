@@ -17,22 +17,37 @@ router.get("/", async (req, res, next) => {
 router.get("/:productId", async (req, res, next) => {
   try {
     const { productId } = req.params;
-    const product = await Product.findByPk(productId);
+    const product = await Product.findByPk(productId, {
+      include: { model: Order },
+    });
     res.send(product);
   } catch (err) {
     next(err);
   }
 });
 
-router.delete('/:id', async (req, res, next) => {
-  try{
-    const {id} = req.params;
-    const productToDestroy = await Product.findByPk(id);
+router.delete("/:productId", async (req, res, next) => {
+  try {
+    const { productId } = req.params;
+    const productToDestroy = await Product.findByPk(productId, {
+      include: { model: Order },
+    });
     await productToDestroy.destroy();
     res.send(productToDestroy);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/new-product', async (req, res, next) => {
+  try{
+    const{name, price, flavorText,nationalPokedexNumbers} = req.body;
+    const newProduct = await Product.create({name, price, flavorText, nationalPokedexNumbers});
+    res.send(newProduct);
   }catch(err){
     next(err);
   }
 })
+
 
 module.exports = router;
