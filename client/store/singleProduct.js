@@ -32,25 +32,39 @@ const updateProduct = (product) => {
 // THUNKS
 export const fetchProduct = (productId) => {
   return async (dispatch) => {
-    const { data: product } = await axios.get(`/api/products/${productId}`);
-    dispatch(setProduct(product));
+    try{
+      const { data: product } = await axios.get(`/api/products/${productId}`);
+      dispatch(setProduct(product));
+    }catch(err){
+      console.log(err);
+    }
+    
   };
 };
 
 export const deleteProduct = (product) => {
   return async (dispatch) => {
+    try{
+      const { data: deletedProduct } = await axios.delete(
+        `/api/products/${product.id}`
+      );
+      dispatch(deleteItem(deletedProduct));
+    }catch(err){
+      console.log(err);
+    }
 
-    const { data: deletedProduct } = await axios.delete(
-      `/api/products/${product.id}`
-    );
-    dispatch(deleteItem(deletedProduct));
   };
 };
 
 export const updateProductThunk = (product) => {
   return async (dispatch) => {
-    const {data: updatedProduct} = await axios.put('/api/products/update', product);
-    dispatch(updateProduct(updatedProduct));
+    try{
+      const {id} = product;
+      const {data: updatedProduct} = await axios.put(`/api/products/update/${id}`, product);
+      dispatch(updateProduct(updatedProduct));
+    }catch(err){
+      console.log(err)
+    }
   }
 }
 

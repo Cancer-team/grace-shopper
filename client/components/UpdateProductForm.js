@@ -1,13 +1,14 @@
 import React from "react";
 import {connect} from 'react-redux'
+import { updateProductThunk } from "../store/singleProduct";
 
 class UpdateProduct extends React.Component {
     constructor(){
         super();
         this.state = {
-            name: this.props.name,
-            price: this.props.price,
-            description: this.props.flavorText
+            name: this.props.product.name,
+            price: this.props.product.price,
+            description: this.props.product.flavorText
         }
         this.submitHandler = this.submitHandler.bind(this);
         this.handleChange = this.handleChange.bind(this);

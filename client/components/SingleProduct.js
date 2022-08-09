@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { fetchProduct, deleteProduct } from "../store/singleProduct";
 import { addItem } from "../store/order";
+import UpdateProduct from "./UpdateProductForm";
 
 export class SingleProduct extends React.Component {
   constructor() {
@@ -40,6 +41,7 @@ export class SingleProduct extends React.Component {
     if (this.props.user.userType === "admin") {
       return (
         <div>
+          < UpdateProduct product={product} />
           <img src={product.imageSmall}></img>
           <h1>Product Name: {product.name}</h1>
           <h2>{product.price / 100}</h2>
