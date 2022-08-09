@@ -25,8 +25,6 @@ export default function singleProductReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_SINGLE_PRODUCT:
       return action.product;
-    // case ADD_ITEM:
-    //   return action.product;
     default:
       return state;
   }
