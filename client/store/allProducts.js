@@ -1,11 +1,14 @@
 import axios from "axios";
 
+// ACTIONS
 const FETCH_ALL_PRODUCTS = "FETCH_ALL_PRODUCTS";
 
-export const setProducts = (products) => {
+// ACTION CREATORS
+const setProducts = (products) => {
   return { type: FETCH_ALL_PRODUCTS, products };
 };
 
+// THUNKS
 export const fetchProducts = () => {
   return async function (dispatch) {
     const response = await axios.get("/api/products");

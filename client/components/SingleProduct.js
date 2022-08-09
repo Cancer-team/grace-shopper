@@ -14,6 +14,7 @@ export class SingleProduct extends React.Component {
     //   }
     // }
     this.isAdmin = this.isAdmin.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
   componentDidMount() {
     const productId = this.props.match.params.productId;
@@ -25,6 +26,11 @@ export class SingleProduct extends React.Component {
   isAdmin(userType) {
     return userType === "admin" ? true : false;
   }
+
+  handleClick() {
+    this.props.deleteProduct(this.props.product);
+    window.location.reload();
+  }
   render() {
     // let userType = this.state.auth.userType || '';
     console.log("THIS props in render", this.props);
@@ -32,20 +38,29 @@ export class SingleProduct extends React.Component {
     const isLoggedIn = this.props.isLoggedIn;
 
     if (!product) {
-      return <div>Pokemon Deleted! Go back to all products...</div>;
+      return (
+        <div>
+          <h2>Pokemon Deleted!</h2>{" "}
+          <Link to={"/products"}>Go back to all products</Link>{" "}
+        </div>
+      );
     }
     if (this.props.user.userType === "admin") {
       return (
         <div>
           <img src={product.imageSmall}></img>
           <h1>Product Name: {product.name}</h1>
-          <h2>{product.price}</h2>
+          <h2>{product.price / 100}</h2>
           <button type="button" onClick={() => this.props.addItem(product)}>
             Add to Cart
           </button>
           <button
             type="button"
-            onClick={() => this.props.deleteProduct(product)}
+            onClick={() => {
+              // this.props.deleteProduct(product);
+              // window.location.reload();
+              this.handleClick();
+            }}
           >
             DELETE ITEM FROM DATABASE
           </button>
