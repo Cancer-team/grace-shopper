@@ -30,39 +30,64 @@ export class SingleProduct extends React.Component {
     console.log("THIS props in render", this.props);
     const product = this.props.product;
     const isLoggedIn = this.props.isLoggedIn;
-
+    // Test 0
     if (!product) {
       return <div>Pokemon Deleted! Go back to all products...</div>;
     }
-    if (this.props.user.userType === "admin") {
-      return (
-        <div>
-          <img src={product.imageSmall}></img>
-          <h1>Product Name: {product.name}</h1>
-          <h2>{product.price}</h2>
-          <button type="button" onClick={() => this.props.addItem(product)}>
-            Add to Cart
-          </button>
-          <button
-            type="button"
-            onClick={() => this.props.deleteProduct(product)}
-          >
-            DELETE ITEM FROM DATABASE
-          </button>
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <img src={product.imageSmall}></img>
-          <h1>Product Name: {product.name}</h1>
-          <h2>{product.price}</h2>
-          <button type="button" onClick={() => this.props.addItem(product)}>
-            Add to Cart
-          </button>
-        </div>
-      );
-    }
+
+    // Test 1
+    return (
+      <div>
+        {isLoggedIn ? (
+          this.props.user.userType === "admin" ? (
+            <div>
+              <img src={product.imageSmall}></img>
+              <h1>Product Name: {product.name}</h1>
+              <h2>{product.price}</h2>
+              <button type="button" onClick={() => this.props.addItem(product)}>
+                Add to Cart
+              </button>
+              <button
+                type="button"
+                onClick={() => this.props.deleteProduct(product)}
+              >
+                DELETE ITEM FROM DATABASE
+              </button>
+            </div>
+          ) : (
+            <div>
+              {" "}
+              Product Name: {product.name}
+              <Link to={"/cart"}>
+                <button onClick={() => this.props.addItem(product)}>
+                  Add to Cart
+                </button>
+              </Link>
+            </div>
+          )
+        ) : (
+          <div>
+
+            {" "}
+            Product Name: {product.name}
+            <button onClick={() => { 
+              let id = product.id;
+              let stringified = JSON.stringify({ id: [1, product] });
+              let got = localStorage.getItem(`${product.id}`)
+              localStorage.setItem('hi', stringified);
+              let currentStorage = localStorage.getItem('hi');
+              let already = JSON.parse(currentStorage);
+              
+              // localStorage.clear()
+            }
+          }>
+
+              Add to Cart
+            </button>
+          </div>
+        )}
+      </div>
+    );
   }
 }
 /* needs to be resolved when final singleProduct Component!!!!!!!!!!!!!!!!!!!!!!

@@ -13,7 +13,6 @@ const reducer = combineReducers({
   auth: auth,
   products: productsReducer,
   product: singleProductReducer,
-  checkoutOrder: checkoutReducer,
   userReducer: userReducer,
   cart: orderReducer,
 });
