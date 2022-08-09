@@ -52,7 +52,6 @@ export const deleteProduct = (product) => {
     }catch(err){
       console.log(err);
     }
-
   };
 };
 
@@ -67,7 +66,6 @@ export const updateProductThunk = (product) => {
     }
   }
 }
-
 const initialState = {};
 
 export default function singleProductReducer(state = initialState, action) {
