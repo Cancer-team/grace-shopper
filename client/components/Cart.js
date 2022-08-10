@@ -153,20 +153,22 @@ class Cart extends React.Component {
     }, 0);
 
     return (
-      <div>
+      <section className="bg-whiteblue" id="carousel">
         {this.props.isLoggedIn ? (
           <div>
-            <ul>
+            <ul className="allProducts">
               {products.map((product, index) => {
                 return <CartItem product={product} key={index} />;
               })}
-              <h1>Total: ${total / 100}</h1>
             </ul>
-            {buttonCheckForUser}
+            <div className="cartBox">
+              <h1>Total: ${total / 100}</h1>
+              {buttonCheckForUser}
+            </div>
           </div>
         ) : (
           <div>
-            <ul>
+            <ul className="allProducts">
               {loggedOutCart.map((product) => {
                 this.state.total += product.Order_Product.totalPrice;
                 const renderCheck =
@@ -205,7 +207,7 @@ class Cart extends React.Component {
                     </div>
                   );
                 return (
-                  <div key={product.id}>
+                  <div className="cartBox" key={product.id}>
                     <Link to={`/products/${product.id}`}>
                       <img src={product.imageSmall} />
                     </Link>
@@ -233,12 +235,14 @@ class Cart extends React.Component {
                   </div>
                 );
               })}
-              <h1>Total: ${this.state.total / 100}</h1>
             </ul>
-            {buttonCheckForGuest}
+            <div className="cartBox">
+              <h1>Total: ${this.state.total / 100}</h1>
+              {buttonCheckForGuest}
+            </div>
           </div>
         )}
-      </div>
+      </section>
     );
   }
 }
