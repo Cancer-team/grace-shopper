@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const Order = require("./Order");
 const Product = require("./Product");
 const Order_Products = require("./Order_Products");
-const sequelize = require("sequelize");
 
 const SALT_ROUNDS = 5;
 

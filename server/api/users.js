@@ -71,9 +71,20 @@ router.post("/newUser", async (req, res, next) => {
       shippingAddress,
       billingAddress,
     });
-
     await newUser.getCart();
     res.status(201).send(newUser);
+  } catch (err) {
+    next(err);
+  }
+});
+
+//editing a User
+router.put("/edit", async (req, res, next) => {
+  try {
+    const user = await User.findByToken(req.headers.authorization);
+    console.log("req.body", req.body);
+    await user.update(req.body);
+    res.status(200).send(user);
   } catch (err) {
     next(err);
   }
@@ -112,7 +123,7 @@ router.post("/addToCart", async (req, res, next) => {
 
 //remove item from cart
 
-router.post("/removeToCart", async (req, res, next) => {
+router.post("/removeFromCart", async (req, res, next) => {
   try {
     const user = await User.findByToken(req.headers.authorization);
     const cart = await user.removeFromCart(req.body);

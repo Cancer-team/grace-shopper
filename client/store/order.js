@@ -81,7 +81,7 @@ export const removeItem = (product) => {
   const token = window.localStorage.getItem(TOKEN);
   return async (dispatch) => {
     const { data: cart } = await axios.post(
-      "/api/users/removeToCart",
+      "/api/users/removeFromCart",
       product,
       {
         headers: {
