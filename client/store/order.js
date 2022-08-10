@@ -86,7 +86,7 @@ export const removeItem = (product) => {
         },
       }
     );
-    dispatch(_removeItem(remove));
+    dispatch(_removeItem(cart));
   };
 };
 
