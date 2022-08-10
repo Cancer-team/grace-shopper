@@ -31,10 +31,6 @@ const _removeItem = (cart) => ({
 });
 
 // Action Creators
-const _guestCart = (cart) => ({
-  type: GUEST_CART,
-  cart,
-});
 
 // Thunks
 export const fetchCart = () => {
@@ -81,8 +77,8 @@ export const addItem = (product) => {
 export const removeItem = (product) => {
   const token = window.localStorage.getItem(TOKEN);
   return async (dispatch) => {
-    const { data: remove } = await axios.post(
-      "/api/users/removeToCart",
+    const { data: cart } = await axios.post(
+      "/api/users/removeFromCart",
       product,
       {
         headers: {

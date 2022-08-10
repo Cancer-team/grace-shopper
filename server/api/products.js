@@ -39,15 +39,31 @@ router.delete("/:productId", async (req, res, next) => {
   }
 });
 
-router.post('/new-product', async (req, res, next) => {
-  try{
-    const{name, price, flavorText,nationalPokedexNumbers} = req.body;
-    const newProduct = await Product.create({name, price, flavorText, nationalPokedexNumbers});
+router.post("/new-product", async (req, res, next) => {
+  try {
+    const { name, price, flavorText, nationalPokedexNumbers } = req.body;
+    const newProduct = await Product.create({
+      name,
+      price,
+      flavorText,
+      nationalPokedexNumbers,
+    });
     res.send(newProduct);
-  }catch(err){
+  } catch (err) {
     next(err);
   }
-})
+});
+
+router.put('/update/:id', async (req, res, next) => {
+  try {
+    const {name, price, description} = req.body;
+   const product = await Product.findByPk(req.params.id);
+   await product.update({name: name, price: price, flavorText: description});
+   res.send(product);
+  } catch (err){
+   next(err)
+  }
+});
 
 
 module.exports = router;
