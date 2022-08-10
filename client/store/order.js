@@ -31,10 +31,6 @@ const _removeItem = (cart) => ({
 });
 
 // Action Creators
-const _guestCart = (cart) => ({
-  type: GUEST_CART,
-  cart,
-});
 
 // Thunks
 export const fetchCart = () => {
@@ -67,6 +63,7 @@ export const updateOrderProduct = (product, updateInfo) => {
 
 export const addItem = (product) => {
   const token = window.localStorage.getItem(TOKEN);
+  console.log(window.localStorage)
   return async function (dispatch) {
     const { data: cart } = await axios.post(`/api/users/addToCart`, product, {
       headers: {
@@ -93,11 +90,9 @@ export const removeItem = (product) => {
   };
 };
 
-export const addToGuestCart = (cart) => {
-  return async function (dispatch) {
-    dispatch(_guestCart(cart));
-  };
-};
+export const deleteFromLocalStorage = (product) => {
+  localStorage.removeItem(`${product.id}`)
+}
 
 // export const removeItem = (productId) => {
 //   return async();

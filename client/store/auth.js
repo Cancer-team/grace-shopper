@@ -20,12 +20,19 @@ const _updateAuth = (auth) => ({ type: UPDATE_AUTH, auth });
  */
 export const me = () => async (dispatch) => {
   const token = window.localStorage.getItem(TOKEN);
+  const localStorage = window.localStorage;
+  for (let key in localStorage) {
+    if (+key) {
+      localStorage.removeItem(key);
+    }
+  }
   if (token) {
     const res = await axios.get("/auth/me", {
       headers: {
         authorization: token,
       },
     });
+    
     return dispatch(setAuth(res.data));
   }
 };

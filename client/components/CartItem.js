@@ -11,7 +11,7 @@ class CartItem extends React.Component {
     this.state = {
       quantity: 1,
       unitPrice: this.props.product.price,
-      totalPrice: 1,
+      totalPrice: this.unitPrice * this.quantity
     };
     this.handleQuantity = this.handleQuantity.bind(this);
     this.handleClick = this.handleClick.bind(this);

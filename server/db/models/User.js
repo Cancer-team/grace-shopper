@@ -219,6 +219,17 @@ User.prototype.updateOrderProduct = async function (product, updateInfo) {
   return this.getCart();
 };
 
+User.prototype.removeFromCart = async function (product) {
+  const cart = await this.getCart();
+  await Order_Products.destroy({
+    where: {
+      orderId: cart.id,
+      productId: product.id,
+    },
+  });
+  return this.getCart();
+};
+
 /**
  * hooks
  */
