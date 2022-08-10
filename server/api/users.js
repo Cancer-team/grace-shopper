@@ -10,7 +10,8 @@ router.get("/", async (req, res, next) => {
       // explicitly select only the id and username fields - even though
       // users' passwords are encrypted, it won't help if we just
       // send everything to anyone who asks!
-      attributes: ["id", "email"],
+      attributes: ["id", "email", 
+      "firstName", "lastName", "shippingAddress", "billingAddress", "phoneNumber", "createdAt"],
     });
     res.json(users);
   } catch (err) {
@@ -123,7 +124,7 @@ router.post("/addToCart", async (req, res, next) => {
 
 //remove item from cart
 
-router.post("/removeToCart", async (req, res, next) => {
+router.post("/removeFromCart", async (req, res, next) => {
   try {
     const user = await User.findByToken(req.headers.authorization);
     const cart = await user.removeFromCart(req.body);
