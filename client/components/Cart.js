@@ -42,7 +42,7 @@ class Cart extends React.Component {
   }
 
   updateQuantity() {
-    
+    this.forceUpdate();
   }
 
   render() {
