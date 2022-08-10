@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchCart, addToGuestCart, deleteFromLocalStorage } from "../store/order";
+import { fetchCart, deleteFromLocalStorage } from "../store/order";
 import CartItem from "./CartItem";
 
 class Cart extends React.Component {
@@ -14,6 +14,9 @@ class Cart extends React.Component {
     this.parseLocalStorage = this.parseLocalStorage.bind(this);
     this.updateTotal = this.updateTotal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this)
+  }
+  componentDidMount(){
+    this.props.me()
   }
   handleSubmit(evt) {
     evt.preventDefault();
