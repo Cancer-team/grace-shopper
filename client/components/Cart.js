@@ -164,7 +164,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchCart: () => dispatch(fetchCart()),
     addToGuestCart: (guestCart) => dispatch(addToGuestCart(guestCart)),
-    deleteFromLocalStorage: (product) => dispatch(deleteFromLocalStorage(product))
   };
 };
 
