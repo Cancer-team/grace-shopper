@@ -246,6 +246,7 @@ const hashPassword = async (user) => {
 };
 
 User.beforeCreate(hashPassword);
+//test
 User.beforeUpdate(hashPassword);
 User.beforeBulkCreate((users) => Promise.all(users.map(hashPassword)));
 // User.afterUpdate(async (user) => {
